@@ -76,7 +76,6 @@
             // Sorry
             // 
             this.Sorry.AutoSize = true;
-            this.Sorry.Enabled = false;
             this.Sorry.ForeColor = System.Drawing.Color.Red;
             this.Sorry.Location = new System.Drawing.Point(15, 63);
             this.Sorry.Name = "Sorry";
@@ -84,12 +83,12 @@
             this.Sorry.TabIndex = 4;
             this.Sorry.Text = "Sorry but this user name is already in use";
             this.Sorry.UseCompatibleTextRendering = true;
+            this.Sorry.Visible = false;
             // 
             // CreateUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.Cancelbutton;
             this.ClientSize = new System.Drawing.Size(265, 119);
             this.Controls.Add(this.Sorry);
             this.Controls.Add(this.Cancelbutton);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Snake
 {
@@ -18,13 +19,17 @@ namespace Snake
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public CircleType Type { get; set; }
+        public CircleType Type { get; }
+        public Brush Color { get; set; }
+        public int Points { get; set; }
 
-        public Circle(CircleType type)
+        public Circle(CircleType type, Brush circlecolor)
         {
             this.X = 0;
             this.Y = 0;
             this.Type = type;
+            this.Color = circlecolor;
+            this.Points = 100;
         }
 
         public void AddX()

@@ -20,7 +20,6 @@ namespace Snake
         public int Heigth { get; private set; }
         public int Speed { get; set; }
         public int Score { get; set; }
-        public int Points { get; set; }
         public bool GameOver { get; set; }
         public Direction Direction { get; set; }
         public int ObstacleCount { get; set; }
@@ -32,7 +31,6 @@ namespace Snake
             Heigth = 10;
             Speed = 15;
             Score = 0;
-            Points = 100;
             GameOver = false;
             Direction = Direction.Down;
             ObstacleCount = 10;

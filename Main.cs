@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Snake
@@ -11,7 +12,7 @@ namespace Snake
     {
         private List<Circle> Obstacles = new List<Circle>();
         private List<Circle> Snake = new List<Circle>();
-        private Circle Food = new Circle(CircleType.food);
+        private Circle Food = new Circle(CircleType.food, Brushes.Red);
         private Settings CurSettings = new Settings();
         private Stopwatch Gametimer = new Stopwatch();
         private Score Score = new Score();
@@ -23,6 +24,8 @@ namespace Snake
             this.MinimumSize = new Size(pbCanvas.Width + 50, pbCanvas.Height + 70);
 
             CurSettings = new Settings();
+            if (!Directory.Exists("./users"))
+                Directory.CreateDirectory("./users");
             foreach (string path in Directory.GetFiles("./users"))
             {
                 string[] spl = path.Split('\\');
@@ -37,13 +40,17 @@ namespace Snake
                 return;
 
             username = SellectUser.SelectedItem.ToString();
+
+            AddUser.Enabled = false;
+            AddUser.Visible = false;
+            SellectUser.Enabled = false;
+            SellectUser.Visible = false;
+            Startbutton.Enabled = false;
+            Startbutton.Visible = false;
+
             Score.LoadUser(username);
             HighScore.Text = $"#1: {Score.HighScore1}\n#2: {Score.HighScore2}\n#3: {Score.HighScore3}";
 
-            AddUser.Dispose();
-            SellectUser.Dispose();
-            Startbutton.Dispose();
-            
             GameTimer.Interval = 1000 / CurSettings.Speed;
             GameTimer.Start();
 
@@ -56,7 +63,7 @@ namespace Snake
 
             CurSettings = new Settings();
 
-            Circle head = new Circle(CircleType.head) { X = 10, Y = 5 };
+            Circle head = new Circle(CircleType.head, Brushes.Black) { X = 10, Y = 5 };
             Snake.Add(head);
 
             lblScore.Text = CurSettings.Score.ToString();
@@ -69,7 +76,7 @@ namespace Snake
             int maxYPos = pbCanvas.Size.Height / CurSettings.Heigth - 3;
 
             Random rand = new Random();
-            Circle obst = new Circle(CircleType.obstacle)
+            Circle obst = new Circle(CircleType.obstacle, Brushes.Blue)
             {
                 X = rand.Next(3, maxXPos),
                 Y = rand.Next(3, maxYPos)
@@ -84,11 +91,16 @@ namespace Snake
             int maxYPos = pbCanvas.Size.Height / CurSettings.Heigth - 3;
 
             Random rand = new Random();
-            Food = new Circle(CircleType.food)
+            Food = new Circle(CircleType.food, Brushes.Red)
             {
                 X = rand.Next(3, maxXPos),
                 Y = rand.Next(3, maxYPos)
             };
+            if (rand.Next(0, 8) == 4)
+            {
+                Food.Color = Brushes.Purple;
+                Food.Points = 200;
+            }
 
             if (Obstacles.Count != 0)
             {
@@ -115,8 +127,20 @@ namespace Snake
         {
             if (CurSettings.GameOver == true)
             {
-                if (Input.KeyPressed(Keys.Enter))
+                if (Input.KeyPressed(Keys.Space))
+                {
                     StartGame();
+                }
+                else if (Input.KeyPressed(Keys.Escape))
+                {
+                    CurSettings = new Settings();
+                    AddUser.Enabled = true;
+                    AddUser.Visible = true;
+                    SellectUser.Enabled = true;
+                    SellectUser.Visible = true;
+                    Startbutton.Enabled = true;
+                    Startbutton.Visible = true;
+                }
             }
             else
             {
@@ -130,12 +154,6 @@ namespace Snake
                     CurSettings.Direction = Direction.Down;
                 else if (Input.KeyPressed(Keys.Escape))
                     GameTimer.Stop();
-                if (Input.KeyPressed(Keys.Enter))
-                {
-                    GameTimer.Dispose();
-                    GameTimer.Interval = 1000 / CurSettings.Speed;
-                    GameTimer.Start();
-                }
 
                 MovePlayer();
             }
@@ -149,27 +167,21 @@ namespace Snake
 
             if (!CurSettings.GameOver)
             {
-                Brush SnakeColor;
                 for (int i = 0; i < Snake.Count; i++)
                 {
-                    if (i == 0)
-                        SnakeColor = Brushes.Black;
-                    else
-                        SnakeColor = Brushes.DarkGreen;
+                    Canvas.FillRectangle(Snake[i].Color, new Rectangle(Snake[i].X * CurSettings.Width, Snake[i].Y * CurSettings.Heigth, CurSettings.Width, CurSettings.Heigth));
 
-                    Canvas.FillRectangle(SnakeColor, new Rectangle(Snake[i].X * CurSettings.Width, Snake[i].Y * CurSettings.Heigth, CurSettings.Width, CurSettings.Heigth));
-
-                    Canvas.FillRectangle(Brushes.Red, new Rectangle(Food.X * CurSettings.Width, Food.Y * CurSettings.Heigth, CurSettings.Width, CurSettings.Heigth));
+                    Canvas.FillRectangle(Food.Color, new Rectangle(Food.X * CurSettings.Width, Food.Y * CurSettings.Heigth, CurSettings.Width, CurSettings.Heigth));
                 }
 
                 foreach(Circle circle in Obstacles)
                 {
-                    Canvas.FillRectangle(Brushes.Blue, new Rectangle(circle.X * CurSettings.Width, circle.Y * CurSettings.Heigth, CurSettings.Width, CurSettings.Heigth));
+                    Canvas.FillRectangle(circle.Color, new Rectangle(circle.X * CurSettings.Width, circle.Y * CurSettings.Heigth, CurSettings.Width, CurSettings.Heigth));
                 }
             }
             else
             {
-                string GameOver = "Game Over \nYour finale score is: " + CurSettings.Score + "\nPress Enter to try again";
+                string GameOver = "Game Over \nYour finale score is: " + CurSettings.Score + "\nPress Space to try again";
                 lblGameOver.Text = GameOver;
                 lblGameOver.Visible = true;
             }
@@ -228,9 +240,7 @@ namespace Snake
                         break;
 
                     if (Snake[i].X == Food.X && Snake[i].Y == Food.Y)
-                    {
                         Eat();
-                    }
                 }
                 else
                 {
@@ -243,10 +253,11 @@ namespace Snake
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
             Input.ChangeState(e.KeyCode, true);
+            label2.Text = e.KeyCode.ToString();
 
-            if(CurSettings.GameOver != true)
+            if (CurSettings.GameOver != true)
             {
-                if (Input.KeyPressed(Keys.Enter))
+                if (Input.KeyPressed(Keys.Space))
                 {
                     GameTimer.Interval = 1000 / CurSettings.Speed;
                     GameTimer.Start();
@@ -261,7 +272,14 @@ namespace Snake
 
         private void Eat()
         {
-            Circle food = new Circle(CircleType.body)
+            Brush brush;
+
+            if (Snake.Count % 2 == 0)
+                brush = Brushes.DarkGreen;
+            else
+                brush = Brushes.Green;
+
+            Circle food = new Circle(CircleType.body, brush)
             {
                 X = Snake[Snake.Count - 1].X,
                 Y = Snake[Snake.Count - 1].Y
@@ -269,7 +287,7 @@ namespace Snake
 
             Snake.Add(food);
 
-            CurSettings.Score += CurSettings.Points;
+            CurSettings.Score += Food.Points;
             lblScore.Text = CurSettings.Score.ToString();
 
             if(CurSettings.Score % 1000 == 0 && Obstacles.Count != CurSettings.ObstacleCount)

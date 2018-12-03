@@ -24,7 +24,7 @@ namespace Snake
         public void LoadUser(string username)
         {
             List<string> EnCryScoreslist = File.ReadAllLines($"./users/{username}.gsf").ToList();
-            List<string> DeCryScoreslist = new List<string>();
+            List<int> DeCryScoreslist = new List<int>();
             using (var md5 = new MD5CryptoServiceProvider())
             {
                 using (var tdes = new TripleDESCryptoServiceProvider())
@@ -39,14 +39,12 @@ namespace Snake
                         {
                             byte[] cipherBytes = Convert.FromBase64String(encry);
                             byte[] bytes = transform.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
-                            DeCryScoreslist.Add(Encoding.UTF8.GetString(bytes));
+                            DeCryScoreslist.Add(int.Parse(Encoding.UTF8.GetString(bytes)));
                         }
                     }
                 }
             }
-
-            DeCryScoreslist.Sort();
-            DeCryScoreslist.Reverse();
+            int[] ScoreArray = DeCryScoreslist.ToArray().OrderByDescending(c => c).ToArray();
             if (DeCryScoreslist.Count == 0)
             {
                 HighScore1 = "0";
@@ -55,21 +53,21 @@ namespace Snake
             }
             else if (DeCryScoreslist.Count == 1)
             {
-                HighScore1 = DeCryScoreslist[0];
+                HighScore1 = ScoreArray[0].ToString();
                 HighScore2 = "0";
                 HighScore3 = "0";
             }
             else if (DeCryScoreslist.Count == 2)
             {
-                HighScore1 = DeCryScoreslist[0];
-                HighScore2 = DeCryScoreslist[1];
+                HighScore1 = ScoreArray[0].ToString();
+                HighScore2 = ScoreArray[1].ToString();
                 HighScore3 = "0";
             }
             else
             {
-                HighScore1 = DeCryScoreslist[0];
-                HighScore2 = DeCryScoreslist[1];
-                HighScore3 = DeCryScoreslist[2];
+                HighScore1 = ScoreArray[0].ToString();
+                HighScore2 = ScoreArray[1].ToString();
+                HighScore3 = ScoreArray[2].ToString();
             }
         }
 

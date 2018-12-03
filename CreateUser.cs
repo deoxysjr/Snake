@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Snake
@@ -39,7 +32,7 @@ namespace Snake
                 }
                 else
                 {
-                    File.Create($"./users/{UserNameTextbox.Text}.gsf");
+                    File.Create($"./users/{UserNameTextbox.Text}.gsf").Close();
                     
                     MainForm.SellectUser.Items.Add(UserNameTextbox.Text);
                     this.Close();
