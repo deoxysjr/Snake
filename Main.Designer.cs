@@ -40,14 +40,13 @@
             this.Startbutton = new System.Windows.Forms.Button();
             this.AddUser = new System.Windows.Forms.Button();
             this.SellectUser = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbCanvas)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pbCanvas
             // 
-            this.pbCanvas.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pbCanvas.BackColor = System.Drawing.SystemColors.Control;
             this.pbCanvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbCanvas.Location = new System.Drawing.Point(12, 39);
             this.pbCanvas.Name = "pbCanvas";
@@ -63,8 +62,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.Controls.Add(this.HighScore);
             this.panel1.Controls.Add(this.highscorelabel);
             this.panel1.Controls.Add(this.lblScore);
@@ -112,7 +110,7 @@
             // lblGameOver
             // 
             this.lblGameOver.AutoSize = true;
-            this.lblGameOver.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lblGameOver.BackColor = System.Drawing.SystemColors.Control;
             this.lblGameOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGameOver.Location = new System.Drawing.Point(30, 52);
             this.lblGameOver.Name = "lblGameOver";
@@ -149,15 +147,6 @@
             this.SellectUser.Name = "SellectUser";
             this.SellectUser.Size = new System.Drawing.Size(180, 21);
             this.SellectUser.TabIndex = 5;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(22, 370);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "label2";
             // 
             // Main
             // 
@@ -196,7 +185,6 @@
         private System.Windows.Forms.Button Startbutton;
         private System.Windows.Forms.Button AddUser;
         public System.Windows.Forms.ComboBox SellectUser;
-        private System.Windows.Forms.Label label2;
     }
 }
 
